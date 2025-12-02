@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel ="stylesheet" href="../style/login.css">
+    <link rel ="stylesheet" href="../public/css/login.css">
     <title>Se connecter</title>
 </head>
 <body>
@@ -20,7 +20,7 @@
         <?php endif; ?>
 
         <h3>Connectez-vous !</h3>
-        <form action="../controller/controller_login.php" method="POST">
+        <form action="../controllers/controller_login.php" method="POST">
             <label for="">Entrez votre nom d'utilisateur ou votre email</label>
             <input type="text" name="username" required>
             <label for="">Entrez votre mot de passe</label>

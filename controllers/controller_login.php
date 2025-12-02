@@ -37,8 +37,13 @@ if($password==$res['passwordUser']){
     $_SESSION['idUser']=$res['idUser'];
     $_SESSION['username']=$res['usernameUser'];
     $_SESSION['role']=$res['roleUser'];
-    header('location: ../views/view_home.php');
-    exit();
+    if($_SESSION['role']=='voyageur'){
+        header('location: ../views/view_home_voyageur.php');
+        exit();
+    }else{
+        header('location: ../views/view_home_proprietaire.php');
+        exit();
+    }
 
 }else{
     $_SESSION['error']="Nom d'utilisateur ou mot de passe incorrect ❌";

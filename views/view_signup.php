@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel ="stylesheet" href="../style/signup.css">
+    <link rel ="stylesheet" href="../public/css/signup.css">
     <title>S'inscrire</title>
 </head>
 <body>
@@ -21,7 +21,7 @@
 
             <h3>Inscrivez-vous !</h3>
 
-        <form action="../controller/controller_sign_up.php" method="post">
+        <form action="../controllers/controller_signup.php" method="post">
             <input type="text" name="prenom" placeholder="Prénom" required/><br><br>    
             <input type="text" name="nom" placeholder="Nom" required/><br><br>
             <input type="text" name="username" placeholder="Nom d'utilisateur" required/><br><br>
