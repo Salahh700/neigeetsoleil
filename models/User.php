@@ -33,6 +33,7 @@ class User {
         return $res=$stmt->fetch(PDO::FETCH_ASSOC);
 
     }
+
 }
 
 ?>

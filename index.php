@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel ="stylesheet" href="style/index.css">
+    <link rel ="stylesheet" href="public/css/index.css">
     <title>Neige&Soleil</title>
     <div class="nav_bar">
         <ul>
@@ -12,8 +12,8 @@
             <li><a href="services.php">Services</a></li>
             <li><a href="contact.php">Contact</a></li>
             <div class="nav_right">
-            <li><button><a href="vue/vue_sign_up.php">S'inscrire</a></button></li>
-            <li><button><a href="vue/vue_login.php">Se Connecter</a></button></li>
+            <li><button><a href="views/view/auth/signup.php">S'inscrire</a></button></li>
+            <li><button><a href="views/auth/login.php">Se Connecter</a></button></li>
             </div>
         </ul>
     </div>
