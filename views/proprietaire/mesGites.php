@@ -53,17 +53,25 @@ $res=$unGite->selectGitesByUser($_SESSION['idUser']);
      ?>
     <div class="each-gite">
 
-        <p><?php $each['nomGite'] ?></p>
-        <p><?php $each['adresseGite'] ?></p>
-        <p><?php $each['villeGite'] ?></p>
-        <p><?php $each['codePostalGite'] ?></p>
-        <p><?php $each['descriptionGite'] ?></p>
-        <p><?php $each['capaciteGite'] ?></p>
-        <p><?php $each['prixNuitGite'] ?> €</p>
-        <p><?php $each['disponibiliteGite'] ?></p>
+        <p>Nom :<?php echo $each['nomGite'] ?></p><br>
+        <p>Adresse: <?php echo $each['adresseGite'] ?></p><br>
+        <p>Ville : <?php echo $each['villeGite'] ?></p><br>
+        <p>Code Postal : <?php echo $each['codePostalGite'] ?></p><br>
+        <p>Description : <?php echo $each['descriptionGite'] ?></p><br>
+        <p>Capacité : <?php echo $each['capaciteGite'] ?></p><br>
+        <p> Prix de la nuitée : <?php echo$each['prixNuitGite'] ?> €</p><br>
+        <?php if( $each['disponibiliteGite']==1 ){
+            echo "<p> Disponible à la réservation ✅ </p>";
+        } else{
+            echo "<p> Indisponible à la réservation ❌ </p>";
+        }?><br>
 
-        <p>🗑️ Supprimer <a href="deleteGiteController.php?id=<?php echo $res['idGite']?>"></a> </p>
-
+        <form method="POST" action="../../controllers/proprietaire/deleteGiteController.php">
+            <input type="hidden" name="id" value="<?php echo $each['idGite']?>">
+            <button type="submit" onclick="return confirm('Confirmer la suppression ?')">
+                🗑️ Supprimer
+            </button>
+        </form> 
     </div>
     <?php
     }

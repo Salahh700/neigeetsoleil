@@ -35,6 +35,7 @@ $data = [
     'idProprietaire'=>$_SESSION['idUser']
 ];
 
+
 if($unGite->insertGite($data)){
     $_SESSION['success']="✅Appartement ajouté avec succès";
     header('location: ../../views/proprietaire/mesGites.php');

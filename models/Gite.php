@@ -1,9 +1,5 @@
 <?php
 
-session_start();
-
-require_once '../config/Database.php';
-
 class Gite  {
     private $conn;
 
@@ -50,6 +46,15 @@ class Gite  {
         $stmt->execute([$idUser]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function selectGite($idGite){
+
+        $req="SELECT * from gites where idGite = ?";
+
+        $stmt=$this->conn->prepare($req);
+
+        return $stmt->execute([$idGite]);
     }
 
     public function deleteGite($idGite){

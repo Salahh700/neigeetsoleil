@@ -15,18 +15,35 @@ $database= new bdd();
 $db=$database->getConn();
 $unGite= new Gite($db);
 
-$idGite=$_GET['id'];
+$idGite=$_POST['id'];
 
-if($unGite->deleteGite($idGite)){
-    $_SESSION['success']="✅ Logement bien supprimé";
-    header('location: ../../views/mesGites.php');
+$res=$unGite->selectGite($idGite);
+
+if (!$res) {
+    $_SESSION['error'] = "Gîte introuvable ❌";
+    header('Location: ../../views/proprietaire/mesGites.php');
     exit();
+}
+
+if($_SESSION['idUser']==$res['idUser']){
+
+    if($unGite->deleteGite($idGite)){
+        $_SESSION['success']="✅ Logement bien supprimé";
+        header('location: ../../views/proprietaire/mesGites.php');
+        exit();
+
+    }else{
+        $_SESSION['error']="❌ Echec de la suppression";
+        header('location: ../../views/proprietaire/mesGites.php');
+        exit();
+
+    }
 
 }else{
-    $_SESSION['error']="❌ Echec de la suppression";
-    header('location: ../../views/mesGites.php');
-    exit();
-    
+    $_SESSION['error']="❌ Accès refusé, vous n'êtes pas le propriétaire de ce logement ";
+        header('location: ../../views/proprietaire/mesGites.php');
+        exit();
+
 }
 
 ?>
