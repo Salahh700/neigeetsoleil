@@ -72,6 +72,12 @@ $res=$unGite->selectGitesByUser($_SESSION['idUser']);
                 🗑️ Supprimer
             </button>
         </form> 
+        <form method="POST" action="updateGite.php">
+            <input type="hidden" name="id" value="<?php echo $each['idGite']?>">
+            <button type="submit" >
+                📝 Modifier
+            </button>
+        </form> 
     </div>
     <?php
     }

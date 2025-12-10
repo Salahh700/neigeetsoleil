@@ -54,7 +54,9 @@ class Gite  {
 
         $stmt=$this->conn->prepare($req);
 
-        return $stmt->execute([$idGite]);
+        $stmt->execute([$idGite]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function deleteGite($idGite){
@@ -64,5 +66,26 @@ class Gite  {
 
         return $stmt->execute([$idGite]);
     } 
+
+    public function updateGite ($data, $idGite){
+        $req="UPDATE gite SET nomGite=?,adresseGite=?,villeGite=?,codePostalGite=?,descriptionGite=?,capaciteGite=?,
+        prixNuitGite=?,
+        disponibiliteGite=?
+        WHERE idGite=?";
+
+        $stmt=$this->conn->prepare($req);
+
+        return $stmt->execute([
+            $data['nom'],
+            $data['adresse'],
+            $data['ville'],
+            $data['codeP'],
+            $data['description'],
+            $data['capacite'],
+            $data['prix'],
+            $data['dispo'],
+            $idGite
+        ]);
+    }
 }
 ?>
