@@ -10,6 +10,6 @@ session_destroy();
 session_start();
 $_SESSION['success']="Déconnexion réussie ✅";
 // Rediriger vers la page de connexion
-header("Location: ../..views/auth/login.php");
+header("Location: ../../views/auth/login.php");
 exit();
 ?>

@@ -23,6 +23,7 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'proprietaire'){
             <li><a href="mesGites.php">Mes logements</a></li>
             <li><a href="profilProprietaire.php">Profil</a></li>
             <li><a href="../../controllers/auth/LogoutController.php">Déconnexion</a></li>
+            <li><input type="text" name="search" placeholder=" "></li>
         </ul>
     </div>
 

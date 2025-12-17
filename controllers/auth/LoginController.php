@@ -41,7 +41,7 @@ if($password==$res['passwordUser']){
         header('location: ../../views/voyageur/homeVoyageur.php');
         exit();
     }else{
-        header('location: ../../views/proprietaire/homeproprietaire.php');
+        header('location: ../../views/proprietaire/homeProprietaire.php');
         exit();
     }
 

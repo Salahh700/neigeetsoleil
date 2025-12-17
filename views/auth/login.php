@@ -20,7 +20,7 @@
         <?php endif; ?>
 
         <h3>Connectez-vous !</h3>
-        <form action="../controllers/auth/LoginController.php" method="POST">
+        <form action="../../controllers/auth/LoginController.php" method="POST">
             <label for="">Entrez votre nom d'utilisateur ou votre email</label>
             <input type="text" name="username" required>
             <label for="">Entrez votre mot de passe</label>

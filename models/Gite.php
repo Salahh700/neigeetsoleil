@@ -8,9 +8,9 @@ class Gite  {
     }
 
     public function insertGite($data){
-        $req="INSERT into gites 
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
+        $req="INSERT into gite (nomGite, adresseGite, villeGite, codePostalGite, descriptionGite, 
+        capaciteGite, prixNuitGite, disponibiliteGite, idUser)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt=$this->conn->prepare($req);
 
         return $stmt->execute([
@@ -22,13 +22,13 @@ class Gite  {
             $data['capacite'],
             $data['prixNuit'],
             $data['disponibilite'],
-            $data['idProprietaire']
+            $data['idUser']
         ]);
     }
 
     public function selectAllGites(){
 
-        $req="SELECT * from gites";
+        $req="SELECT * from gite";
 
         $stmt=$this->conn->prepare($req);
 
@@ -39,7 +39,7 @@ class Gite  {
 
     public function selectGitesByUser($idUser){
 
-        $req="SELECT * from gites where idUser = ?";
+        $req="SELECT * from gite where idUser = ?";
 
         $stmt=$this->conn->prepare($req);
 
@@ -50,7 +50,7 @@ class Gite  {
 
     public function selectGite($idGite){
 
-        $req="SELECT * from gites where idGite = ?";
+        $req="SELECT * from gite where idGite = ?";
 
         $stmt=$this->conn->prepare($req);
 
@@ -60,7 +60,7 @@ class Gite  {
     }
 
     public function deleteGite($idGite){
-        $req="DELETE from gites where idGite = ?";
+        $req="DELETE from gite where idGite = ?";
 
         $stmt=$this->conn->prepare($req);
 

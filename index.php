@@ -12,7 +12,7 @@
             <li><a href="services.php">Services</a></li>
             <li><a href="contact.php">Contact</a></li>
             <div class="nav_right">
-            <li><button><a href="views/view/auth/signup.php">S'inscrire</a></button></li>
+            <li><button><a href="views/auth/signup.php">S'inscrire</a></button></li>
             <li><button><a href="views/auth/login.php">Se Connecter</a></button></li>
             </div>
         </ul>
