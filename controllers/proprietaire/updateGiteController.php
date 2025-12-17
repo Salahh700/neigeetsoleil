@@ -33,7 +33,8 @@ $data=[
     'description'=>$_POST['desc'],
     'capacite'=>$_POST['capacite'],
     'prix'=>$_POST['prix'],
-    'dispo'=>$dispo
+    'dispo'=>$dispo,
+    'etatGite'=>$_POST['etat']
 ];
 
 if(!isset($data)){

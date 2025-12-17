@@ -14,7 +14,84 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'proprietaire') {
     exit();
 }
 
+// RÉCUPÉRER LES GÎTES
 $res = $unGite->selectGitesByUser($_SESSION['idUser']);
+
+// ========== RECHERCHE ==========
+if (!empty($_GET['search_ville']) || !empty($_GET['search_adresse']) || !empty($_GET['search_prix_min']) || !empty($_GET['search_prix_max']) || isset($_GET['search_dispo']) || !empty($_GET['search_etat'])) {
+    $res = array_filter($res, function($gite) {
+        $match = true;
+        
+        // Filtre ville
+        if (!empty($_GET['search_ville'])) {
+            $match = $match && (stripos($gite['villeGite'], $_GET['search_ville']) !== false);
+        }
+        
+        // Filtre adresse
+        if (!empty($_GET['search_adresse'])) {
+            $match = $match && (stripos($gite['adresseGite'], $_GET['search_adresse']) !== false);
+        }
+        
+        // Filtre prix min
+        if (!empty($_GET['search_prix_min'])) {
+            $match = $match && ($gite['prixNuitGite'] >= $_GET['search_prix_min']);
+        }
+        
+        // Filtre prix max
+        if (!empty($_GET['search_prix_max'])) {
+            $match = $match && ($gite['prixNuitGite'] <= $_GET['search_prix_max']);
+        }
+        
+        // Filtre disponibilité
+        if (isset($_GET['search_dispo']) && $_GET['search_dispo'] !== '') {
+            $match = $match && ($gite['disponibiliteGite'] == $_GET['search_dispo']);
+        }
+        
+        // Filtre état (si le champ existe)
+        if (!empty($_GET['search_etat'])) {
+            $etat = $gite['etatGite'] ?? 'Bien';
+            $match = $match && ($etat == $_GET['search_etat']);
+        }
+        
+        return $match;
+    });
+}
+
+// ========== TRI ==========
+if (isset($_GET['sort'])) {
+    switch ($_GET['sort']) {
+        case 'prix_asc':
+            usort($res, function($a, $b) {
+                return $a['prixNuitGite'] <=> $b['prixNuitGite'];
+            });
+            break;
+        case 'prix_desc':
+            usort($res, function($a, $b) {
+                return $b['prixNuitGite'] <=> $a['prixNuitGite'];
+            });
+            break;
+        case 'ville_asc':
+            usort($res, function($a, $b) {
+                return strcasecmp($a['villeGite'], $b['villeGite']);
+            });
+            break;
+        case 'ville_desc':
+            usort($res, function($a, $b) {
+                return strcasecmp($b['villeGite'], $a['villeGite']);
+            });
+            break;
+        case 'capacite_asc':
+            usort($res, function($a, $b) {
+                return $a['capaciteGite'] <=> $b['capaciteGite'];
+            });
+            break;
+        case 'capacite_desc':
+            usort($res, function($a, $b) {
+                return $b['capaciteGite'] <=> $a['capaciteGite'];
+            });
+            break;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -74,8 +151,15 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
         }
         .search-btn:hover { background: #2980b9; }
+        .reset-btn {
+            background: #95a5a6;
+            margin-left: 10px;
+        }
+        .reset-btn:hover { background: #7f8c8d; }
         
         /* BOUTONS DE TRI */
         .sort-section {
@@ -99,6 +183,8 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
         }
         .sort-btn:hover { background: #7f8c8d; }
         
@@ -165,9 +251,18 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
         }
         .add-btn:hover { background: #27ae60; }
         
-        .etat-bien { color: #f39c12; }
-        .etat-tb { color: #3498db; }
-        .etat-excellent { color: #2ecc71; }
+        .etat-bien { color: #f39c12; font-weight: bold; }
+        .etat-tb { color: #3498db; font-weight: bold; }
+        .etat-excellent { color: #2ecc71; font-weight: bold; }
+        
+        .result-count {
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -218,7 +313,7 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
                     </select>
                 </div>
                 <button type="submit" class="search-btn">🔍 Rechercher</button>
-                <a href="mesGites.php" class="search-btn" style="background: #95a5a6; display: inline-block; text-decoration: none; margin-left: 10px;">🔄 Réinitialiser</a>
+                <a href="mesGites.php" class="search-btn reset-btn">🔄 Réinitialiser</a>
             </form>
         </div>
 
@@ -226,13 +321,18 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
         <div class="sort-section">
             <h4>📊 Trier par</h4>
             <div class="sort-buttons">
-                <a href="?sort=prix_asc" class="sort-btn">💰 Prix ↑</a>
-                <a href="?sort=prix_desc" class="sort-btn">💰 Prix ↓</a>
-                <a href="?sort=ville_asc" class="sort-btn">🏙️ Ville A→Z</a>
-                <a href="?sort=ville_desc" class="sort-btn">🏙️ Ville Z→A</a>
-                <a href="?sort=capacite_asc" class="sort-btn">👥 Capacité ↑</a>
-                <a href="?sort=capacite_desc" class="sort-btn">👥 Capacité ↓</a>
+                <a href="?sort=prix_asc<?= http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) ? '&' . http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) : '' ?>" class="sort-btn">💰 Prix ↑</a>
+                <a href="?sort=prix_desc<?= http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) ? '&' . http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) : '' ?>" class="sort-btn">💰 Prix ↓</a>
+                <a href="?sort=ville_asc<?= http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) ? '&' . http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) : '' ?>" class="sort-btn">🏙️ Ville A→Z</a>
+                <a href="?sort=ville_desc<?= http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) ? '&' . http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) : '' ?>" class="sort-btn">🏙️ Ville Z→A</a>
+                <a href="?sort=capacite_asc<?= http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) ? '&' . http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) : '' ?>" class="sort-btn">👥 Capacité ↑</a>
+                <a href="?sort=capacite_desc<?= http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) ? '&' . http_build_query(array_filter($_GET, function($k) { return $k !== 'sort'; }, ARRAY_FILTER_USE_KEY)) : '' ?>" class="sort-btn">👥 Capacité ↓</a>
             </div>
+        </div>
+
+        <!-- RÉSULTATS -->
+        <div class="result-count">
+            📊 <?= count($res) ?> logement(s) trouvé(s)
         </div>
 
         <!-- TABLEAU DES GÎTES -->
@@ -254,7 +354,7 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
                     <?php if (empty($res)): ?>
                         <tr>
                             <td colspan="8" style="text-align: center; padding: 30px;">
-                                Aucun logement pour le moment
+                                Aucun logement trouvé
                             </td>
                         </tr>
                     <?php else: ?>
@@ -267,7 +367,6 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
                                 <td><?= $gite['prixNuitGite'] ?> €</td>
                                 <td>
                                     <?php 
-                                    // Pour l'instant affiche "Bien" par défaut (tu ajouteras le champ après)
                                     $etat = $gite['etatGite'] ?? 'Bien';
                                     $class = $etat == 'Excellent' ? 'etat-excellent' : ($etat == 'TB' ? 'etat-tb' : 'etat-bien');
                                     ?>
@@ -275,20 +374,20 @@ $res = $unGite->selectGitesByUser($_SESSION['idUser']);
                                 </td>
                                 <td>
                                     <?php if ($gite['disponibiliteGite'] == 1): ?>
-                                        <span class="status-disponible">✅ Disponible</span>
+                                        <span class="status-disponible">✅ Dispo</span>
                                     <?php else: ?>
-                                        <span class="status-indisponible">❌ Indisponible</span>
+                                        <span class="status-indisponible">❌ Indispo</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
                                     <div class="actions">
                                         <form method="POST" action="updateGite.php" style="display: inline;">
                                             <input type="hidden" name="idGite" value="<?= $gite['idGite'] ?>">
-                                            <button type="submit" class="btn-edit">📝 Modifier</button>
+                                            <button type="submit" class="btn-edit">📝</button>
                                         </form>
                                         <form method="POST" action="../../controllers/proprietaire/deleteGiteController.php" style="display: inline;">
                                             <input type="hidden" name="id" value="<?= $gite['idGite'] ?>">
-                                            <button type="submit" class="btn-delete" onclick="return confirm('❌ Confirmer la suppression ?')">🗑️ Supprimer</button>
+                                            <button type="submit" class="btn-delete" onclick="return confirm('❌ Supprimer ?')">🗑️</button>
                                         </form>
                                     </div>
                                 </td>

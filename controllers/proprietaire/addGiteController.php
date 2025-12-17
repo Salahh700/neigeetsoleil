@@ -32,7 +32,8 @@ $data = [
     'prixNuit'=> $_POST['prix'],
     'capacite'=> $_POST['capacite'],
     'disponibilite'=> $disponibilite,
-    'idUser'=>$_SESSION['idUser']
+    'idUser'=>$_SESSION['idUser'],
+    'etatGite'=>$_POST['etat']
 ];
 
 

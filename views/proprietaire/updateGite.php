@@ -87,15 +87,22 @@ if($_SESSION['idUser']!==$res['idUser']){
         <textarea name="desc"><?php echo $res['descriptionGite']; ?></textarea><br>
 
         <label for="">Capacité :</label><br>
-        <input type="number" name="capacite" value="<?php echo $res['capaciteGite']; ?>"><br>
+        <input type="number" name="capacite" min="1" max="10" value="<?php echo $res['capaciteGite']; ?>"><br>
 
         <label for="">Prix nuitée :</label><br>
-        <input type="number" name="prix" value="<?php echo $res['prixNuitGite']; ?>"><br>
+        <input type="number" name="prix" min="45" max="500" value="<?php echo $res['prixNuitGite']; ?>"><br>
 
         <label for="">Disponibilité</label><br>
         <input type="checkbox" name="dispo" <?php $check=$res['disponibiliteGite']==1 ? 'checked' : '' ;echo $check ?>><br>
 
         <input type="hidden" name="idGite" value="<?php echo $res['idGite']; ?>">
+
+        <label for="">État</label>
+            <select name="etat" required>
+                <option value="Bien" <?= ($res['etatGite'] ?? 'Bien') == 'Bien' ? 'selected' : '' ?>>Bien</option>
+                <option value="TB" <?= ($res['etatGite'] ?? 'Bien') == 'TB' ? 'selected' : '' ?>>Très Bien</option>
+                <option value="Excellent" <?= ($res['etatGite'] ?? 'Bien') == 'Excellent' ? 'selected' : '' ?>>Excellent</option>
+            </select>
 
         <input type="submit" name="valider" value="Modifier" onclick="return confirm('📝 Êtes vous sûr de vouloir modifier ce gîte ?')">
             

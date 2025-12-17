@@ -54,14 +54,21 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'proprietaire'){
 
         <label for="prix">Prix par nuit:</label>
         <input type="number" id="prix" name="prix" required
-                    placeholder="65"><br><br>
+                    placeholder="65" min="45" max="500" ><br><br>
 
         <label for="capacite">Capacité du logement:</label>
         <input type="number" id="capacite" name="capacite" required
-                    placeholder="5" max=15><br><br>
+                    placeholder="5" min="1" max="10"><br><br>
 
         <label for="disponibilite">Voulez vous le rendre disponible au lancement ?</label>
-        <input type="checkbox" id="disponibilite" name="disponibilite" checked>
+        <input type="checkbox" id="disponibilite" name="disponibilite" checked><br><br>
+
+        <label for="">Etat:</label>
+        <select name="etat" required>
+            <option value="Bien">Bien</option>
+            <option value="TB">Très Bien</option>
+            <option value="Excellent">Excellent</option>
+        </select><br><br>
 
 
         <input type="submit" value="Ajouter le logement" name="add">

@@ -9,8 +9,8 @@ class Gite  {
 
     public function insertGite($data){
         $req="INSERT into gite (nomGite, adresseGite, villeGite, codePostalGite, descriptionGite, 
-        capaciteGite, prixNuitGite, disponibiliteGite, idUser)
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        capaciteGite, prixNuitGite, disponibiliteGite, idUser, etatGite)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt=$this->conn->prepare($req);
 
         return $stmt->execute([
@@ -22,7 +22,8 @@ class Gite  {
             $data['capacite'],
             $data['prixNuit'],
             $data['disponibilite'],
-            $data['idUser']
+            $data['idUser'],
+            $data['etatGite']
         ]);
     }
 
@@ -67,13 +68,20 @@ class Gite  {
         return $stmt->execute([$idGite]);
     } 
 
-    public function updateGite ($data, $idGite){
-        $req="UPDATE gite SET nomGite=?,adresseGite=?,villeGite=?,codePostalGite=?,descriptionGite=?,capaciteGite=?,
-        prixNuitGite=?,
-        disponibiliteGite=?
-        WHERE idGite=?";
+    public function updateGite($data, $idGite) {
+        $req = "UPDATE gite SET 
+            nomGite = ?, 
+            adresseGite = ?, 
+            villeGite = ?, 
+            codePostalGite = ?, 
+            descriptionGite = ?, 
+            capaciteGite = ?, 
+            prixNuitGite = ?, 
+            disponibiliteGite = ?, 
+            etatGite = ?
+            WHERE idGite = ?";
 
-        $stmt=$this->conn->prepare($req);
+        $stmt = $this->conn->prepare($req);
 
         return $stmt->execute([
             $data['nom'],
@@ -84,7 +92,8 @@ class Gite  {
             $data['capacite'],
             $data['prix'],
             $data['dispo'],
-            $idGite
+            $data['etatGite'],  // ← AVANT idGite
+            $idGite             // ← EN DERNIER
         ]);
     }
 }
